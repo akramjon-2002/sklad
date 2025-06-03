@@ -14,17 +14,31 @@ AppAsset::register($this);
 
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
-$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
-$this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? 'Система управления складом']);
-$this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? 'склад, инвентарь, штрихкод']);
+$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, viewport-fit=cover']);
+$this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? 'Современная PWA система управления складом с поддержкой штрихкодов']);
+$this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? 'склад, инвентарь, штрихкод, PWA, мобильное приложение']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 
 // PWA meta tags
-$this->registerMetaTag(['name' => 'theme-color', 'content' => '#0d6efd']);
+$this->registerMetaTag(['name' => 'theme-color', 'content' => '#3b82f6']);
 $this->registerMetaTag(['name' => 'apple-mobile-web-app-capable', 'content' => 'yes']);
 $this->registerMetaTag(['name' => 'apple-mobile-web-app-status-bar-style', 'content' => 'default']);
 $this->registerMetaTag(['name' => 'apple-mobile-web-app-title', 'content' => 'Склад']);
+$this->registerMetaTag(['name' => 'mobile-web-app-capable', 'content' => 'yes']);
+$this->registerMetaTag(['name' => 'application-name', 'content' => 'Склад']);
+$this->registerMetaTag(['name' => 'msapplication-TileColor', 'content' => '#3b82f6']);
+
+// Icons
+$this->registerLinkTag(['rel' => 'apple-touch-icon', 'sizes' => '192x192', 'href' => Yii::getAlias('@web/icon-192.png')]);
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'sizes' => '192x192', 'href' => Yii::getAlias('@web/icon-192.png')]);
+$this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'sizes' => '512x512', 'href' => Yii::getAlias('@web/icon-512.png')]);
 $this->registerLinkTag(['rel' => 'manifest', 'href' => Yii::getAlias('@web/manifest.json')]);
+
+// Register modern CSS
+$this->registerCssFile('@web/css/modern.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+
+// Register PWA JS
+$this->registerJsFile('@web/js/pwa.js', ['position' => \yii\web\View::POS_END]);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

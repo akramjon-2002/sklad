@@ -203,6 +203,40 @@ class ProductController extends Controller
     }
 
     /**
+     * Get product by barcode (AJAX endpoint)
+     * @param string $barcode
+     * @return array
+     */
+    public function actionGetByBarcode($barcode)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $product = Product::find()
+            ->with('category')
+            ->where(['barcode' => $barcode])
+            ->one();
+            
+        if ($product) {
+            return [
+                'success' => true,
+                'product' => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'barcode' => $product->barcode,
+                    'price' => $product->price_per_unit,
+                    'stock' => $product->current_stock,
+                    'category_name' => $product->category ? $product->category->name : null,
+                ]
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => 'Товар не найден'
+            ];
+        }
+    }
+
+    /**
      * Finds the Product model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
