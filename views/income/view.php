@@ -42,9 +42,9 @@ $this->params['breadcrumbs'][] = $this->title;
             'quantity',
             'price_per_unit:currency',
             [
-                'attribute' => 'total_amount',
-                'value' => number_format($model->total_amount, 2) . ' ₽',
-                'label' => 'Общая сумма',
+                'attribute' => 'total_cost',
+                'value' => number_format($model->total_cost, 2) . ' ₽',
+                'label' => 'Общая стоимость',
             ],
             'notes:ntext',
             'created_at:datetime',

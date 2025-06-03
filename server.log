@@ -635,3 +635,119 @@
 [Tue Jun  3 11:41:14 2025] 10.2.58.81:56984 Closing
 [Tue Jun  3 11:41:14 2025] 10.2.58.81:56994 [200]: GET /css/site.css
 [Tue Jun  3 11:41:14 2025] 10.2.58.81:56994 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53258 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53258 [200]: GET /index.php?r=income%2Fcreate
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53258 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53274 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53274 [200]: GET /assets/d3cb6ce2/css/bootstrap.css
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53274 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53284 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53300 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53316 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53330 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53346 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53316 [200]: GET /assets/8da73390/yii.js
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53330 [200]: GET /assets/8da73390/yii.validation.js
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53300 [200]: GET /assets/dc323f94/jquery.js
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53316 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53330 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53284 [200]: GET /css/site.css
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53346 [200]: GET /assets/8da73390/yii.activeForm.js
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53284 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53346 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53300 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53356 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53356 [200]: GET /assets/d3cb6ce2/js/bootstrap.bundle.js
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53356 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53362 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53362 [200]: GET /sw.js
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53362 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53376 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53392 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53376 [302]: GET /
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53376 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53396 Accepted
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53392 [200]: GET /css/site.css
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53396 [404]: GET /js/app.js - No such file or directory
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53396 Closing
+[Tue Jun  3 11:42:13 2025] 10.2.58.81:53392 Closing
+[Tue Jun  3 11:42:20 2025] 10.2.58.81:48890 Accepted
+[Tue Jun  3 11:42:20 2025] 10.2.58.81:48890 [302]: GET /
+[Tue Jun  3 11:42:20 2025] 10.2.58.81:48890 Closing
+[Tue Jun  3 11:42:32 2025] 10.2.58.81:37604 Accepted
+[Tue Jun  3 11:42:32 2025] 10.2.58.81:37604 [302]: POST /index.php?r=income%2Fcreate
+[Tue Jun  3 11:42:32 2025] 10.2.58.81:37604 Closing
+[Tue Jun  3 11:42:32 2025] 10.2.58.81:37614 Accepted
+[Tue Jun  3 11:42:32 2025] 10.2.58.81:37614 [500]: GET /index.php?r=income%2Fview&id=1
+[Tue Jun  3 11:42:32 2025] 10.2.58.81:37614 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34404 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34404 [200]: GET /index.php?r=income%2Fview&id=1
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34404 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34412 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34426 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34442 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34412 [200]: GET /assets/d3cb6ce2/css/bootstrap.css
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34442 [200]: GET /assets/dc323f94/jquery.js
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34412 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34442 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34426 [200]: GET /css/site.css
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34426 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34450 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34450 [200]: GET /assets/8da73390/yii.js
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34450 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34466 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34466 [200]: GET /assets/d3cb6ce2/js/bootstrap.bundle.js
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34466 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34482 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34482 [200]: GET /sw.js
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34482 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34494 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34498 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34494 [302]: GET /
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34494 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34498 [200]: GET /css/site.css
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34514 Accepted
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34514 [404]: GET /js/app.js - No such file or directory
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34498 Closing
+[Tue Jun  3 11:43:33 2025] 10.2.58.81:34514 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48740 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48740 [200]: GET /index.php?r=income%2Findex
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48740 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48748 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48750 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48748 [200]: GET /assets/d3cb6ce2/css/bootstrap.css
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48748 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48752 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48760 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48752 [200]: GET /assets/dc323f94/jquery.js
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48750 [200]: GET /css/site.css
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48760 [200]: GET /assets/8da73390/yii.js
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48750 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48760 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48752 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48770 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48778 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48770 [200]: GET /assets/8da73390/yii.gridView.js
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48778 [200]: GET /assets/a4e299ca/jquery.pjax.js
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48770 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48778 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48794 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48794 [200]: GET /assets/d3cb6ce2/js/bootstrap.bundle.js
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48794 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48798 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48798 [200]: GET /sw.js
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48798 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48812 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48826 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48812 [302]: GET /
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48812 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48842 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48826 [200]: GET /css/site.css
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48842 [404]: GET /js/app.js - No such file or directory
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48842 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48826 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48852 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48852 [200]: GET /manifest.json
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48852 Closing
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48854 Accepted
+[Tue Jun  3 11:43:40 2025] 10.2.58.81:48858 Accepted

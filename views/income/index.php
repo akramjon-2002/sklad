@@ -36,11 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'quantity',
             'price_per_unit:currency',
             [
-                'attribute' => 'total_amount',
+                'attribute' => 'total_cost',
                 'value' => function($model) {
-                    return number_format($model->total_amount, 2) . ' ₽';
+                    return number_format($model->total_cost, 2) . ' ₽';
                 },
-                'label' => 'Общая сумма',
+                'label' => 'Общая стоимость',
             ],
             'notes:ntext',
             'created_at:datetime',
