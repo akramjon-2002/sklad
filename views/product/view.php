@@ -29,21 +29,55 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'name',
-            'barcode',
+            [
+                'attribute' => 'id',
+                'label' => 'ID',
+            ],
+            [
+                'attribute' => 'name',
+                'label' => 'Название',
+            ],
+            [
+                'attribute' => 'barcode',
+                'label' => 'Штрихкод',
+            ],
             [
                 'attribute' => 'category_id',
                 'value' => $model->category ? $model->category->name : 'Не указана',
                 'label' => 'Категория',
             ],
-            'price:currency',
-            'unit',
-            'stock_quantity',
-            'is_template:boolean',
-            'description:ntext',
-            'created_at:datetime',
-            'updated_at:datetime',
+            [
+                'attribute' => 'price_per_unit',
+                'value' => number_format($model->price_per_unit, 0, '.', ' ') . ' ₽',
+                'label' => 'Цена за единицу',
+            ],
+            [
+                'attribute' => 'unit_type',
+                'label' => 'Единица измерения',
+            ],
+            [
+                'attribute' => 'current_stock',
+                'label' => 'Остаток на складе',
+            ],
+            [
+                'attribute' => 'is_template',
+                'value' => $model->is_template ? 'Да' : 'Нет',
+                'label' => 'Шаблон',
+            ],
+            [
+                'attribute' => 'description',
+                'label' => 'Описание',
+            ],
+            [
+                'attribute' => 'created_at',
+                'value' => date('d.m.Y H:i', strtotime($model->created_at)),
+                'label' => 'Создано',
+            ],
+            [
+                'attribute' => 'updated_at',
+                'value' => date('d.m.Y H:i', strtotime($model->updated_at)),
+                'label' => 'Обновлено',
+            ],
         ],
     ]) ?>
 

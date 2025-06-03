@@ -194,10 +194,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                     </div>
                                     <div class="text-end">
                                         <div class="badge bg-warning text-dark fs-6 mb-1">
-                                            <?= $product->stock ?> шт.
+                                            <?= $product->current_stock ?> шт.
                                         </div>
                                         <div>
-                                            <small class="text-muted"><?= number_format($product->price, 0, '.', ' ') ?> ₽</small>
+                                            <small class="text-muted"><?= number_format($product->price_per_unit, 0, '.', ' ') ?> ₽</small>
                                         </div>
                                     </div>
                                 </div>
