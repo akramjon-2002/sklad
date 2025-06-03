@@ -1,16 +1,17 @@
-const CACHE_NAME = 'sklad-v2';
-const STATIC_CACHE = 'sklad-static-v2';
-const DYNAMIC_CACHE = 'sklad-dynamic-v2';
+const CACHE_NAME = 'sklad-tailwind-v1';
+const STATIC_CACHE = 'sklad-static-tailwind-v1';
+const DYNAMIC_CACHE = 'sklad-dynamic-tailwind-v1';
 
 const STATIC_FILES = [
   '/',
   '/index.php',
-  '/css/bootstrap.min.css',
-  '/css/modern.css',
-  '/js/bootstrap.bundle.min.js',
+  '/css/tailwind.css',
+  '/css/site.css',
+  '/js/pwa.js',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
+  'https://cdn.tailwindcss.com',
   'https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js'
 ];
 
@@ -20,7 +21,7 @@ const CACHE_STRATEGIES = {
     '/css/',
     '/js/',
     '/icon-',
-    'bootstrap',
+    'tailwindcss',
     'quagga'
   ],
   // Network first for dynamic content

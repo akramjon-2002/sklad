@@ -16,208 +16,189 @@ $this->title = 'Панель управления';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="report-index fade-in">
+<div class="space-y-8">
     <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
         <div>
-            <h1 class="h2 text-gradient mb-2"><?= Html::encode($this->title) ?></h1>
-            <p class="text-muted mb-0">Добро пожаловать в систему управления складом</p>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">📊 Панель управления</h1>
+            <p class="text-lg text-gray-600">Добро пожаловать в систему управления складом</p>
         </div>
-        <div class="text-end">
-            <div class="badge bg-primary fs-6 px-3 py-2">
+        <div class="text-right">
+            <div class="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-lg font-semibold">
                 📅 <?= date('d.m.Y') ?>
             </div>
-            <div class="text-muted mt-1">
-                🕐 <?= date('H:i') ?>
+            <div class="text-sm text-gray-500 mt-1">
+                <?= date('H:i') ?>
             </div>
         </div>
     </div>
 
-    <!-- Статистика -->
-    <div class="row g-4 mb-5">
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="stats-number"><?= number_format($todaySales, 0, ',', ' ') ?> ₽</div>
-                        <div class="stats-label">Продажи сегодня</div>
-                        <small class="text-muted"><?= $todayCount ?> транзакций</small>
-                    </div>
-                    <div class="quick-action-icon" style="width: 48px; height: 48px; font-size: 1.2rem;">
-                        💰
-                    </div>
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Today Sales -->
+        <div class="stats-card bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-blue-600 mb-1">Продажи сегодня</p>
+                    <p class="text-3xl font-bold text-blue-900"><?= number_format($todaySales, 0, ',', ' ') ?> ₽</p>
+                    <p class="text-sm text-blue-600 mt-1"><?= $todayCount ?> транзакций</p>
                 </div>
+                <div class="text-4xl text-blue-500">💰</div>
             </div>
         </div>
-        
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="stats-number"><?= number_format($monthSales, 0, ',', ' ') ?> ₽</div>
-                        <div class="stats-label">Продажи за месяц</div>
-                    </div>
-                    <div class="quick-action-icon" style="width: 48px; height: 48px; font-size: 1.2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                        📈
-                    </div>
+
+        <!-- Month Sales -->
+        <div class="stats-card bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-green-600 mb-1">Продажи за месяц</p>
+                    <p class="text-3xl font-bold text-green-900"><?= number_format($monthSales, 0, ',', ' ') ?> ₽</p>
+                    <p class="text-sm text-green-600 mt-1">Текущий месяц</p>
                 </div>
+                <div class="text-4xl text-green-500">📈</div>
             </div>
         </div>
-        
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="stats-number"><?= $totalProducts ?></div>
-                        <div class="stats-label">Всего товаров</div>
-                    </div>
-                    <div class="quick-action-icon" style="width: 48px; height: 48px; font-size: 1.2rem; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
-                        📦
-                    </div>
+
+        <!-- Total Products -->
+        <div class="stats-card bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-purple-600 mb-1">Всего товаров</p>
+                    <p class="text-3xl font-bold text-purple-900"><?= $totalProducts ?></p>
+                    <p class="text-sm text-purple-600 mt-1">В каталоге</p>
                 </div>
+                <div class="text-4xl text-purple-500">📦</div>
             </div>
         </div>
-        
-        <div class="col-lg-3 col-md-6">
-            <div class="stats-card">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <div class="stats-number"><?= $outOfStockProducts ?></div>
-                        <div class="stats-label">Нет в наличии</div>
-                    </div>
-                    <div class="quick-action-icon" style="width: 48px; height: 48px; font-size: 1.2rem; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
-                        ⚠️
-                    </div>
+
+        <!-- Out of Stock -->
+        <div class="stats-card bg-gradient-to-br from-red-50 to-red-100 border-red-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-red-600 mb-1">Нет в наличии</p>
+                    <p class="text-3xl font-bold text-red-900"><?= $outOfStockProducts ?></p>
+                    <p class="text-sm text-red-600 mt-1">Товаров</p>
                 </div>
+                <div class="text-4xl text-red-500">⚠️</div>
             </div>
         </div>
     </div>
 
-    <!-- Быстрые действия -->
-    <div class="mb-5">
-        <h3 class="h4 mb-4">⚡ Быстрые действия</h3>
-        <div class="quick-actions">
-            <a href="<?= Url::to(['sale/quick']) ?>" class="quick-action-card">
-                <div class="quick-action-icon">📱</div>
-                <div class="quick-action-title">Быстрая продажа</div>
-                <div class="quick-action-desc">Сканирование штрихкода и продажа товара</div>
-            </a>
-            
-            <a href="<?= Url::to(['product/create']) ?>" class="quick-action-card">
-                <div class="quick-action-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">➕</div>
-                <div class="quick-action-title">Добавить товар</div>
-                <div class="quick-action-desc">Создание нового товара в системе</div>
-            </a>
-            
-            <a href="<?= Url::to(['income/create']) ?>" class="quick-action-card">
-                <div class="quick-action-icon" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">📥</div>
-                <div class="quick-action-title">Приход товара</div>
-                <div class="quick-action-desc">Оформление поступления товара на склад</div>
-            </a>
-            
-            <a href="<?= Url::to(['product/index']) ?>" class="quick-action-card">
-                <div class="quick-action-icon" style="background: linear-gradient(135deg, #64748b 0%, #475569 100%);">📋</div>
-                <div class="quick-action-title">Все товары</div>
-                <div class="quick-action-desc">Просмотр и управление товарами</div>
-            </a>
+    <!-- Quick Actions -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="text-xl font-bold text-gray-900">⚡ Быстрые действия</h2>
+        </div>
+        <div class="card-body">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="<?= Url::to(['/sale/quick']) ?>" class="btn-primary text-center block">
+                    📱 Быстрая продажа
+                </a>
+                <a href="<?= Url::to(['/product/create']) ?>" class="btn-success text-center block">
+                    ➕ Добавить товар
+                </a>
+                <a href="<?= Url::to(['/income/create']) ?>" class="btn-warning text-center block">
+                    📦 Оформить приход
+                </a>
+                <a href="<?= Url::to(['/category/create']) ?>" class="btn-secondary text-center block">
+                    🏷️ Новая категория
+                </a>
+                <a href="<?= Url::to(['/product/index']) ?>" class="btn-secondary text-center block">
+                    📋 Все товары
+                </a>
+                <a href="<?= Url::to(['/sale/index']) ?>" class="btn-secondary text-center block">
+                    💼 История продаж
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Последние операции и товары с низким остатком -->
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 d-flex align-items-center">
-                        <span class="me-2">🛒</span>
-                        Последние продажи
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <?php if (!empty($recentSales)): ?>
-                        <div class="list-group list-group-flush">
-                            <?php foreach ($recentSales as $sale): ?>
-                                <div class="list-group-item border-0 px-0 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="fw-semibold"><?= Html::encode($sale->product->name) ?></div>
-                                        <small class="text-muted">
-                                            📅 <?= date('d.m.Y H:i', strtotime($sale->created_at)) ?>
-                                        </small>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Recent Sales -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-xl font-bold text-gray-900">🕒 Последние продажи</h2>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($recentSales)): ?>
+                    <div class="space-y-4">
+                        <?php foreach ($recentSales as $sale): ?>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <span class="text-blue-600 font-semibold"><?= substr($sale->product->name, 0, 1) ?></span>
                                     </div>
-                                    <div class="text-end">
-                                        <div class="badge bg-success fs-6 mb-1">
-                                            <?= number_format($sale->total_amount, 0, '.', ' ') ?> ₽
-                                        </div>
-                                        <div>
-                                            <small class="text-muted"><?= $sale->quantity ?> шт.</small>
-                                        </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900"><?= Html::encode($sale->product->name) ?></p>
+                                        <p class="text-sm text-gray-500">
+                                            <?= $sale->quantity ?> × <?= number_format($sale->price_per_unit, 0, ',', ' ') ?> ₽
+                                        </p>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="mt-4">
-                            <a href="<?= Url::to(['sale/index']) ?>" class="btn btn-outline-primary">
-                                Все продажи →
-                            </a>
-                        </div>
-                    <?php else: ?>
-                        <div class="text-center py-4">
-                            <div class="text-muted mb-3" style="font-size: 3rem;">🛒</div>
-                            <p class="text-muted">Продаж пока нет</p>
-                            <a href="<?= Url::to(['sale/quick']) ?>" class="btn btn-primary">
-                                Создать первую продажу
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-green-600"><?= number_format($sale->total_amount, 0, ',', ' ') ?> ₽</p>
+                                    <p class="text-xs text-gray-500"><?= date('H:i', strtotime($sale->created_at)) ?></p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="<?= Url::to(['/sale/index']) ?>" class="text-blue-600 hover:text-blue-800 font-medium">
+                            Посмотреть все продажи →
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-8">
+                        <div class="text-6xl mb-4">📊</div>
+                        <p class="text-gray-500">Пока нет продаж</p>
+                        <a href="<?= Url::to(['/sale/quick']) ?>" class="btn-primary mt-4 inline-block">
+                            Создать первую продажу
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
-        
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 d-flex align-items-center">
-                        <span class="me-2">⚠️</span>
-                        Товары с низким остатком
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <?php if (!empty($lowStockProducts)): ?>
-                        <div class="list-group list-group-flush">
-                            <?php foreach ($lowStockProducts as $product): ?>
-                                <div class="list-group-item border-0 px-0 d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="fw-semibold"><?= Html::encode($product->name) ?></div>
-                                        <small class="text-muted">
-                                            Штрихкод: <?= Html::encode($product->barcode) ?>
-                                        </small>
+
+        <!-- Low Stock Alert -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-xl font-bold text-gray-900">⚠️ Низкий остаток</h2>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($lowStockProducts)): ?>
+                    <div class="space-y-4">
+                        <?php foreach ($lowStockProducts as $product): ?>
+                            <div class="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                                        <span class="text-yellow-600 font-semibold"><?= substr($product->name, 0, 1) ?></span>
                                     </div>
-                                    <div class="text-end">
-                                        <div class="badge bg-warning text-dark fs-6 mb-1">
-                                            <?= $product->current_stock ?> шт.
-                                        </div>
-                                        <div>
-                                            <small class="text-muted"><?= number_format($product->price_per_unit, 0, '.', ' ') ?> ₽</small>
-                                        </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900"><?= Html::encode($product->name) ?></p>
+                                        <p class="text-sm text-gray-500">
+                                            <?= number_format($product->price_per_unit, 0, ',', ' ') ?> ₽ за <?= Html::encode($product->unit_type) ?>
+                                        </p>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="mt-4">
-                            <a href="<?= Url::to(['product/index']) ?>" class="btn btn-outline-warning">
-                                Все товары →
-                            </a>
-                        </div>
-                    <?php else: ?>
-                        <div class="text-center py-4">
-                            <div class="text-muted mb-3" style="font-size: 3rem;">✅</div>
-                            <p class="text-muted">Все товары в наличии</p>
-                            <a href="<?= Url::to(['product/index']) ?>" class="btn btn-primary">
-                                Просмотреть товары
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                                <div class="text-right">
+                                    <p class="font-bold text-red-600"><?= $product->current_stock ?></p>
+                                    <p class="text-xs text-gray-500">осталось</p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="<?= Url::to(['/income/create']) ?>" class="btn-warning inline-block">
+                            Пополнить склад
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div class="text-center py-8">
+                        <div class="text-6xl mb-4">✅</div>
+                        <p class="text-gray-500">Все товары в наличии</p>
+                        <p class="text-sm text-gray-400 mt-2">Отличная работа!</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

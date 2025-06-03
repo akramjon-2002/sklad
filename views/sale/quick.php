@@ -2,358 +2,412 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var app\models\QuickSaleForm $model */
 
 $this->title = 'Быстрая продажа';
-$this->params['breadcrumbs'][] = ['label' => 'Продажи', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-// Register QuaggaJS for barcode scanning
-$this->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js', ['position' => \yii\web\View::POS_HEAD]);
 ?>
 
-<div class="sale-quick fade-in">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h1 class="h2 text-gradient mb-2"><?= Html::encode($this->title) ?></h1>
-            <p class="text-muted mb-0">Сканируйте штрихкод или введите его вручную</p>
-        </div>
-        <div class="badge bg-success fs-6 px-3 py-2">
-            📱 Быстрая продажа
-        </div>
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">⚡ Быстрая продажа</h1>
+        <p class="text-lg text-gray-600">Сканируйте штрихкод или введите его вручную</p>
     </div>
 
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <div class="scanner-container">
-                <h5 class="mb-4 d-flex align-items-center">
-                    <span class="me-2">📷</span>
-                    Сканирование штрихкода
-                </h5>
-                
-                <div class="text-center mb-4">
-                    <div class="scanner-overlay mb-4">
-                        <div id="interactive" class="viewport scanner-video" style="width: 100%; height: 300px; display: none;"></div>
-                        <div id="scanner-placeholder" class="d-flex align-items-center justify-content-center" style="width: 100%; height: 300px; background: var(--gray-100); border-radius: var(--radius-lg); border: 2px dashed var(--gray-300);">
-                            <div class="text-center">
-                                <div style="font-size: 4rem; margin-bottom: 1rem;">📷</div>
-                                <p class="text-muted">Нажмите "Включить камеру" для сканирования</p>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Scanner Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-xl font-bold text-gray-900">📷 Сканер штрихкодов</h2>
+            </div>
+            <div class="card-body">
+                <!-- Camera Scanner -->
+                <div id="scanner-container" class="scanner-container mb-6">
+                    <div id="scanner" class="w-full h-64 bg-gray-900 rounded-lg flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <div class="text-4xl mb-4">📷</div>
+                            <p class="mb-4">Нажмите кнопку ниже для включения камеры</p>
+                            <button id="start-scanner" class="btn-primary">
+                                Включить камеру
+                            </button>
+                        </div>
+                    </div>
+                    <div id="scanner-overlay" class="scanner-overlay hidden"></div>
+                </div>
+
+                <!-- Manual Input -->
+                <div class="space-y-4">
+                    <label class="form-label">Или введите штрихкод вручную:</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="manual-barcode" class="form-input flex-1" 
+                               placeholder="Введите штрихкод..." autocomplete="off">
+                        <button id="search-product" class="btn-secondary">
+                            🔍 Найти
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scanner Status -->
+                <div id="scanner-status" class="mt-4 p-4 rounded-lg bg-blue-50 border border-blue-200 hidden">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                        <span class="text-blue-800 font-medium">Сканер активен - наведите на штрихкод</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sale Form Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-xl font-bold text-gray-900">🛒 Оформление продажи</h2>
+            </div>
+            <div class="card-body">
+                <?php $form = ActiveForm::begin([
+                    'id' => 'quick-sale-form',
+                    'options' => ['class' => 'space-y-6']
+                ]); ?>
+
+                <!-- Product Info Display -->
+                <div id="product-info" class="product-info-card hidden">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-16 h-16 bg-green-100 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">📦</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 id="product-name" class="text-lg font-bold text-green-800 mb-1"></h3>
+                            <p id="product-details" class="text-sm text-green-600 mb-2"></p>
+                            <div class="flex items-center space-x-4 text-sm">
+                                <span class="bg-green-100 px-2 py-1 rounded">
+                                    💰 <span id="product-price"></span>
+                                </span>
+                                <span class="bg-green-100 px-2 py-1 rounded">
+                                    📦 <span id="product-stock"></span> в наличии
+                                </span>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="d-flex gap-3 justify-content-center mb-4">
-                        <button id="start-scanner" class="btn btn-primary btn-lg">
-                            📹 Включить камеру
-                        </button>
-                        <button id="stop-scanner" class="btn btn-outline-secondary btn-lg" style="display: none;">
-                            ⏹️ Остановить
-                        </button>
-                    </div>
-                    
-                    <div class="alert alert-info border-0">
-                        <div class="d-flex align-items-center">
-                            <span class="me-2">💡</span>
-                            <span>Наведите камеру на штрихкод товара для автоматического сканирования</span>
+                </div>
+
+                <!-- Form Fields -->
+                <div class="space-y-4">
+                    <?= $form->field($model, 'barcode', [
+                        'template' => '<label class="form-label">{label}</label>{input}{error}',
+                        'inputOptions' => [
+                            'class' => 'form-input',
+                            'placeholder' => 'Штрихкод будет заполнен автоматически'
+                        ]
+                    ]) ?>
+
+                    <?= $form->field($model, 'quantity', [
+                        'template' => '<label class="form-label">{label}</label>{input}{error}',
+                        'inputOptions' => [
+                            'class' => 'form-input',
+                            'type' => 'number',
+                            'step' => '0.001',
+                            'min' => '0.001',
+                            'placeholder' => 'Введите количество'
+                        ]
+                    ]) ?>
+
+                    <?= $form->field($model, 'price_per_unit', [
+                        'template' => '<label class="form-label">{label}</label>{input}{error}',
+                        'inputOptions' => [
+                            'class' => 'form-input',
+                            'type' => 'number',
+                            'step' => '0.01',
+                            'min' => '0',
+                            'placeholder' => 'Цена будет заполнена автоматически'
+                        ]
+                    ]) ?>
+
+                    <!-- Total Amount Display -->
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-medium text-gray-700">Итого к оплате:</span>
+                            <span id="total-amount" class="text-2xl font-bold text-green-600">0 ₽</span>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0 d-flex align-items-center">
-                        <span class="me-2">🛒</span>
-                        Оформление продажи
-                    </h5>
+                <!-- Submit Button -->
+                <div class="flex space-x-4">
+                    <?= Html::submitButton('💳 Оформить продажу', [
+                        'class' => 'btn-success flex-1',
+                        'id' => 'submit-sale'
+                    ]) ?>
+                    <button type="button" id="clear-form" class="btn-secondary">
+                        🗑️ Очистить
+                    </button>
                 </div>
-                <div class="card-body">
-                    <?php $form = ActiveForm::begin([
-                        'id' => 'quick-sale-form',
-                        'options' => ['class' => 'needs-validation', 'novalidate' => true]
-                    ]); ?>
 
-                    <div class="mb-4">
-                        <?= $form->field($model, 'barcode')->textInput([
-                            'placeholder' => 'Отсканируйте или введите штрихкод',
-                            'class' => 'form-control form-control-lg',
-                            'id' => 'barcode-input',
-                            'autocomplete' => 'off'
-                        ])->label('Штрихкод товара', ['class' => 'form-label fw-semibold']) ?>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <?= $form->field($model, 'quantity')->textInput([
-                                'type' => 'number',
-                                'min' => '0.01',
-                                'step' => '0.01',
-                                'value' => '1',
-                                'class' => 'form-control'
-                            ])->label('Количество', ['class' => 'form-label fw-semibold']) ?>
-                        </div>
-                        <div class="col-md-6">
-                            <?= $form->field($model, 'price_per_unit')->textInput([
-                                'type' => 'number',
-                                'min' => '0',
-                                'step' => '0.01',
-                                'class' => 'form-control',
-                                'placeholder' => 'Цена за единицу'
-                            ])->label('Цена за единицу (₽)', ['class' => 'form-label fw-semibold']) ?>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <?= Html::submitButton('💰 Оформить продажу', [
-                            'class' => 'btn btn-success btn-lg',
-                            'id' => 'submit-sale'
-                        ]) ?>
-                        
-                        <a href="<?= \yii\helpers\Url::to(['index']) ?>" class="btn btn-outline-secondary">
-                            ← Вернуться к списку продаж
-                        </a>
-                    </div>
-
-                    <?php ActiveForm::end(); ?>
-                </div>
-            </div>
-
-            <!-- Product Info Card -->
-            <div id="product-info" class="card mt-4" style="display: none;">
-                <div class="card-header bg-light">
-                    <h6 class="mb-0 d-flex align-items-center">
-                        <span class="me-2">📦</span>
-                        Информация о товаре
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div id="product-details"></div>
-                </div>
+                <?php ActiveForm::end(); ?>
             </div>
         </div>
     </div>
+
+    <!-- Success/Error Messages -->
+    <div id="sale-messages" class="space-y-4"></div>
 </div>
 
-<style>
-.scanner-overlay {
-    position: relative;
-    display: inline-block;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
+<!-- Include QuaggaJS for barcode scanning -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 
-.scanner-overlay::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 2px;
-    background: var(--danger);
-    box-shadow: 0 0 10px var(--danger);
-    animation: scanLine 2s ease-in-out infinite;
-    z-index: 10;
-}
-
-@keyframes scanLine {
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-}
-
-.viewport {
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-}
-
-#barcode-input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.btn-lg {
-    padding: var(--space-4) var(--space-6);
-    font-size: 1.1rem;
-}
-</style>
-
-<?php
-$this->registerJs("
-let scanner = null;
-let isScanning = false;
-
-// Start scanner
-document.getElementById('start-scanner').addEventListener('click', function() {
-    startScanner();
-});
-
-// Stop scanner
-document.getElementById('stop-scanner').addEventListener('click', function() {
-    stopScanner();
-});
-
-function startScanner() {
-    if (isScanning) return;
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let isScanning = false;
     
-    document.getElementById('scanner-placeholder').style.display = 'none';
-    document.getElementById('interactive').style.display = 'block';
-    document.getElementById('start-scanner').style.display = 'none';
-    document.getElementById('stop-scanner').style.display = 'inline-block';
-    
-    Quagga.init({
-        inputStream: {
-            name: 'Live',
-            type: 'LiveStream',
-            target: document.querySelector('#interactive'),
-            constraints: {
-                width: 640,
-                height: 480,
-                facingMode: 'environment'
-            }
-        },
-        decoder: {
-            readers: [
-                'code_128_reader',
-                'ean_reader',
-                'ean_8_reader',
-                'code_39_reader',
-                'code_39_vin_reader',
-                'codabar_reader',
-                'upc_reader',
-                'upc_e_reader'
-            ]
-        }
-    }, function(err) {
-        if (err) {
-            console.error('Ошибка инициализации сканера:', err);
-            alert('Не удалось запустить камеру. Проверьте разрешения.');
-            stopScanner();
-            return;
-        }
-        console.log('Сканер запущен');
-        Quagga.start();
-        isScanning = true;
-    });
-    
-    Quagga.onDetected(function(data) {
-        const barcode = data.codeResult.code;
-        console.log('Штрихкод обнаружен:', barcode);
-        
-        // Fill barcode input
-        document.getElementById('barcode-input').value = barcode;
-        
-        // Trigger change event to load product info
-        document.getElementById('barcode-input').dispatchEvent(new Event('change'));
-        
-        // Stop scanner after successful scan
-        setTimeout(() => {
-            stopScanner();
-        }, 1000);
-    });
-}
-
-function stopScanner() {
-    if (scanner) {
-        Quagga.stop();
-        isScanning = false;
-    }
-    
-    document.getElementById('scanner-placeholder').style.display = 'flex';
-    document.getElementById('interactive').style.display = 'none';
-    document.getElementById('start-scanner').style.display = 'inline-block';
-    document.getElementById('stop-scanner').style.display = 'none';
-}
-
-// Load product info when barcode changes
-document.getElementById('barcode-input').addEventListener('change', function() {
-    const barcode = this.value.trim();
-    if (barcode) {
-        loadProductInfo(barcode);
-    }
-});
-
-function loadProductInfo(barcode) {
-    // Show loading state
+    // Elements
+    const startScannerBtn = document.getElementById('start-scanner');
+    const scannerContainer = document.getElementById('scanner');
+    const scannerOverlay = document.getElementById('scanner-overlay');
+    const scannerStatus = document.getElementById('scanner-status');
+    const manualBarcodeInput = document.getElementById('manual-barcode');
+    const searchProductBtn = document.getElementById('search-product');
     const productInfo = document.getElementById('product-info');
-    const productDetails = document.getElementById('product-details');
+    const clearFormBtn = document.getElementById('clear-form');
+    const submitSaleBtn = document.getElementById('submit-sale');
+    const saleMessages = document.getElementById('sale-messages');
     
-    productInfo.style.display = 'block';
-    productDetails.innerHTML = '<div class=\"text-center\"><div class=\"spinner-border text-primary\" role=\"status\"></div><p class=\"mt-2\">Загрузка информации о товаре...</p></div>';
+    // Form fields
+    const barcodeField = document.getElementById('quicksaleform-barcode');
+    const quantityField = document.getElementById('quicksaleform-quantity');
+    const priceField = document.getElementById('quicksaleform-price_per_unit');
+    const totalAmount = document.getElementById('total-amount');
     
-    // Make AJAX request to get product info
-    fetch('/index.php?r=product/get-by-barcode&barcode=' + encodeURIComponent(barcode))
-        .then(response => response.json())
+    // Start scanner
+    startScannerBtn.addEventListener('click', function() {
+        if (!isScanning) {
+            startScanner();
+        } else {
+            stopScanner();
+        }
+    });
+    
+    // Manual barcode search
+    searchProductBtn.addEventListener('click', function() {
+        const barcode = manualBarcodeInput.value.trim();
+        if (barcode) {
+            searchProduct(barcode);
+        }
+    });
+    
+    // Enter key for manual input
+    manualBarcodeInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchProductBtn.click();
+        }
+    });
+    
+    // Calculate total on quantity/price change
+    quantityField.addEventListener('input', calculateTotal);
+    priceField.addEventListener('input', calculateTotal);
+    
+    // Clear form
+    clearFormBtn.addEventListener('click', function() {
+        clearForm();
+    });
+    
+    function startScanner() {
+        Quagga.init({
+            inputStream: {
+                name: "Live",
+                type: "LiveStream",
+                target: scannerContainer,
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment"
+                }
+            },
+            decoder: {
+                readers: [
+                    "code_128_reader",
+                    "ean_reader",
+                    "ean_8_reader",
+                    "code_39_reader"
+                ]
+            }
+        }, function(err) {
+            if (err) {
+                console.log(err);
+                showMessage('Ошибка доступа к камере: ' + err.message, 'error');
+                return;
+            }
+            console.log("Initialization finished. Ready to start");
+            Quagga.start();
+            isScanning = true;
+            startScannerBtn.textContent = 'Остановить камеру';
+            startScannerBtn.className = 'btn-danger';
+            scannerOverlay.classList.remove('hidden');
+            scannerStatus.classList.remove('hidden');
+        });
+        
+        Quagga.onDetected(function(data) {
+            const barcode = data.codeResult.code;
+            console.log('Barcode detected:', barcode);
+            searchProduct(barcode);
+            stopScanner();
+        });
+    }
+    
+    function stopScanner() {
+        if (isScanning) {
+            Quagga.stop();
+            isScanning = false;
+            startScannerBtn.textContent = 'Включить камеру';
+            startScannerBtn.className = 'btn-primary';
+            scannerOverlay.classList.add('hidden');
+            scannerStatus.classList.add('hidden');
+            
+            // Reset scanner container
+            scannerContainer.innerHTML = `
+                <div class="text-center text-white">
+                    <div class="text-4xl mb-4">📷</div>
+                    <p class="mb-4">Нажмите кнопку ниже для включения камеры</p>
+                    <button id="start-scanner" class="btn-primary">
+                        Включить камеру
+                    </button>
+                </div>
+            `;
+            
+            // Re-attach event listener
+            document.getElementById('start-scanner').addEventListener('click', function() {
+                startScanner();
+            });
+        }
+    }
+    
+    function searchProduct(barcode) {
+        showMessage('Поиск товара...', 'info');
+        
+        fetch('/index.php?r=product/get-by-barcode&barcode=' + encodeURIComponent(barcode))
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayProduct(data.product, barcode);
+                    manualBarcodeInput.value = '';
+                } else {
+                    showMessage('Товар с таким штрихкодом не найден', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('Ошибка при поиске товара', 'error');
+            });
+    }
+    
+    function displayProduct(product, barcode) {
+        // Fill form fields
+        barcodeField.value = barcode;
+        quantityField.value = '1';
+        priceField.value = product.price;
+        
+        // Display product info
+        document.getElementById('product-name').textContent = product.name;
+        document.getElementById('product-details').textContent = 
+            `Категория: ${product.category_name} | Штрихкод: ${barcode}`;
+        document.getElementById('product-price').textContent = 
+            `${parseFloat(product.price).toLocaleString()} ₽`;
+        document.getElementById('product-stock').textContent = 
+            `${parseFloat(product.stock)} шт`;
+        
+        productInfo.classList.remove('hidden');
+        calculateTotal();
+        
+        showMessage('Товар найден и добавлен в форму', 'success');
+        
+        // Focus on quantity field
+        quantityField.focus();
+        quantityField.select();
+    }
+    
+    function calculateTotal() {
+        const quantity = parseFloat(quantityField.value) || 0;
+        const price = parseFloat(priceField.value) || 0;
+        const total = quantity * price;
+        
+        totalAmount.textContent = total.toLocaleString() + ' ₽';
+    }
+    
+    function clearForm() {
+        barcodeField.value = '';
+        quantityField.value = '';
+        priceField.value = '';
+        manualBarcodeInput.value = '';
+        productInfo.classList.add('hidden');
+        totalAmount.textContent = '0 ₽';
+        clearMessages();
+    }
+    
+    function showMessage(message, type) {
+        clearMessages();
+        
+        const alertClass = {
+            'success': 'alert-success',
+            'error': 'alert-error',
+            'warning': 'alert-warning',
+            'info': 'alert-info'
+        }[type] || 'alert-info';
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = alertClass;
+        messageDiv.innerHTML = `
+            <div class="flex items-center justify-between">
+                <span>${message}</span>
+                <button onclick="this.parentElement.parentElement.remove()" class="text-current opacity-75 hover:opacity-100">✕</button>
+            </div>
+        `;
+        
+        saleMessages.appendChild(messageDiv);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (messageDiv.parentElement) {
+                messageDiv.remove();
+            }
+        }, 5000);
+    }
+    
+    function clearMessages() {
+        saleMessages.innerHTML = '';
+    }
+    
+    // Handle form submission
+    document.getElementById('quick-sale-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        
+        submitSaleBtn.disabled = true;
+        submitSaleBtn.innerHTML = '<div class="spinner mr-2"></div>Обработка...';
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
         .then(data => {
-            if (data.success) {
-                const product = data.product;
-                document.getElementById('quicksaleform-price_per_unit').value = product.price;
-                
-                productDetails.innerHTML = `
-                    <div class=\"row\">
-                        <div class=\"col-md-8\">
-                            <h6 class=\"fw-bold text-primary\">\${product.name}</h6>
-                            <p class=\"text-muted mb-2\">\${product.category_name || 'Без категории'}</p>
-                            <div class=\"d-flex gap-3\">
-                                <span class=\"badge bg-success\">\${Number(product.price).toLocaleString()} ₽</span>
-                                <span class=\"badge bg-info\">\${product.stock} шт. в наличии</span>
-                            </div>
-                        </div>
-                        <div class=\"col-md-4 text-end\">
-                            <small class=\"text-muted\">Штрихкод:</small><br>
-                            <code>\${product.barcode}</code>
-                        </div>
-                    </div>
-                `;
+            // Check if response contains success message
+            if (data.includes('Продажа успешно оформлена') || data.includes('alert-success')) {
+                showMessage('Продажа успешно оформлена!', 'success');
+                clearForm();
             } else {
-                productDetails.innerHTML = `
-                    <div class=\"text-center text-danger\">
-                        <div style=\"font-size: 2rem; margin-bottom: 1rem;\">❌</div>
-                        <p>Товар с штрихкодом <code>\${barcode}</code> не найден</p>
-                        <small class=\"text-muted\">Проверьте правильность штрихкода или добавьте товар в систему</small>
-                    </div>
-                `;
+                showMessage('Ошибка при оформлении продажи', 'error');
             }
         })
         .catch(error => {
-            console.error('Ошибка загрузки информации о товаре:', error);
-            productDetails.innerHTML = `
-                <div class=\"text-center text-warning\">
-                    <div style=\"font-size: 2rem; margin-bottom: 1rem;\">⚠️</div>
-                    <p>Ошибка загрузки информации о товаре</p>
-                    <small class=\"text-muted\">Попробуйте еще раз</small>
-                </div>
-            `;
+            console.error('Error:', error);
+            showMessage('Ошибка при отправке данных', 'error');
+        })
+        .finally(() => {
+            submitSaleBtn.disabled = false;
+            submitSaleBtn.innerHTML = '💳 Оформить продажу';
         });
-}
-
-// Auto-focus barcode input
-document.getElementById('barcode-input').focus();
-
-// Form validation
-document.getElementById('quick-sale-form').addEventListener('submit', function(e) {
-    const barcode = document.getElementById('barcode-input').value.trim();
-    const quantity = document.getElementById('quicksaleform-quantity').value;
-    const price = document.getElementById('quicksaleform-price_per_unit').value;
-    
-    if (!barcode || !quantity || !price) {
-        e.preventDefault();
-        alert('Пожалуйста, заполните все поля');
-        return false;
-    }
-    
-    // Show loading state on submit button
-    const submitBtn = document.getElementById('submit-sale');
-    submitBtn.innerHTML = '<span class=\"spinner-border spinner-border-sm me-2\"></span>Обработка...';
-    submitBtn.disabled = true;
+    });
 });
-");
-?>
+</script>

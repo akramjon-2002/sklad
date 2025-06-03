@@ -34,8 +34,26 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'sizes' => '192x
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'sizes' => '512x512', 'href' => Yii::getAlias('@web/icon-512.png')]);
 $this->registerLinkTag(['rel' => 'manifest', 'href' => Yii::getAlias('@web/manifest.json')]);
 
-// Register modern CSS
-$this->registerCssFile('@web/css/modern.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+// Register Tailwind CSS
+$this->registerCssFile('https://cdn.tailwindcss.com', ['position' => \yii\web\View::POS_HEAD]);
+$this->registerCssFile('@web/css/tailwind.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+
+// Tailwind config
+$this->registerJs("
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: {
+                    50: '#eff6ff',
+                    500: '#3b82f6',
+                    600: '#2563eb',
+                    700: '#1d4ed8',
+                }
+            }
+        }
+    }
+}", \yii\web\View::POS_HEAD);
 
 // Register PWA JS
 $this->registerJsFile('@web/js/pwa.js', ['position' => \yii\web\View::POS_END]);
@@ -47,61 +65,134 @@ $this->registerJsFile('@web/js/pwa.js', ['position' => \yii\web\View::POS_END]);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+<body class="min-h-screen bg-gray-50">
 <?php $this->beginBody() ?>
 
-<header id="header">
-    <?php
-    NavBar::begin([
-        'brandLabel' => 'Склад',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => ['class' => 'navbar-expand-md navbar-dark bg-primary fixed-top']
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav me-auto'],
-        'items' => [
-            ['label' => 'Панель', 'url' => ['/report/index']],
-            ['label' => 'Товары', 'url' => ['/product/index']],
-            ['label' => 'Категории', 'url' => ['/category/index']],
-            ['label' => 'Продажи', 'url' => ['/sale/index']],
-            ['label' => 'Приход', 'url' => ['/income/index']],
-            ['label' => 'Быстрая продажа', 'url' => ['/sale/quick']],
-        ]
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav'],
-        'items' => [
-            Yii::$app->user->isGuest
-                ? ['label' => 'Вход', 'url' => ['/site/login']]
-                : '<li class="nav-item">'
-                    . Html::beginForm(['/site/logout'])
-                    . Html::submitButton(
-                        'Выход (' . Yii::$app->user->identity->username . ')',
-                        ['class' => 'nav-link btn btn-link logout text-white']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-        ]
-    ]);
-    NavBar::end();
-    ?>
+<!-- Offline Indicator -->
+<div id="offline-indicator" class="offline-indicator">
+    <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 bg-red-300 rounded-full animate-pulse"></div>
+        <span>Нет подключения к интернету</span>
+    </div>
+</div>
+
+<!-- PWA Install Prompt -->
+<div id="pwa-install-prompt" class="pwa-install-prompt">
+    <div class="flex items-center justify-between">
+        <div>
+            <h4 class="font-semibold">Установить приложение</h4>
+            <p class="text-sm opacity-90">Добавьте на главный экран для быстрого доступа</p>
+        </div>
+        <div class="flex space-x-2">
+            <button id="pwa-install-btn" class="bg-white text-blue-600 px-4 py-2 rounded font-semibold">Установить</button>
+            <button id="pwa-dismiss-btn" class="text-white opacity-75 hover:opacity-100">✕</button>
+        </div>
+    </div>
+</div>
+
+<header class="navbar shadow-lg">
+    <div class="container mx-auto px-4">
+        <div class="flex items-center justify-between h-16">
+            <!-- Brand -->
+            <a href="<?= Yii::$app->homeUrl ?>" class="navbar-brand flex items-center space-x-2">
+                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                    <span class="text-lg">📦</span>
+                </div>
+                <span>Склад</span>
+            </a>
+            
+            <!-- Mobile menu button -->
+            <button id="mobile-menu-btn" class="md:hidden text-white hover:text-blue-100 p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex navbar-nav">
+                <a href="<?= \yii\helpers\Url::to(['/report/index']) ?>" class="nav-link">📊 Панель</a>
+                <a href="<?= \yii\helpers\Url::to(['/product/index']) ?>" class="nav-link">📦 Товары</a>
+                <a href="<?= \yii\helpers\Url::to(['/category/index']) ?>" class="nav-link">🏷️ Категории</a>
+                <a href="<?= \yii\helpers\Url::to(['/sale/index']) ?>" class="nav-link">💰 Продажи</a>
+                <a href="<?= \yii\helpers\Url::to(['/income/index']) ?>" class="nav-link">📈 Приход</a>
+                <a href="<?= \yii\helpers\Url::to(['/sale/quick']) ?>" class="nav-link bg-white bg-opacity-20">⚡ Быстрая продажа</a>
+            </nav>
+            
+            <!-- User menu -->
+            <div class="hidden md:flex items-center space-x-4">
+                <?php if (Yii::$app->user->isGuest): ?>
+                    <a href="<?= \yii\helpers\Url::to(['/site/login']) ?>" class="nav-link">🔐 Вход</a>
+                <?php else: ?>
+                    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'inline']) ?>
+                    <?= Html::submitButton(
+                        '👤 Выход',
+                        ['class' => 'nav-link bg-transparent border-0 cursor-pointer']
+                    ) ?>
+                    <?= Html::endForm() ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <nav id="mobile-menu" class="md:hidden hidden bg-white bg-opacity-10 rounded-lg mt-2 p-4">
+            <div class="flex flex-col space-y-2">
+                <a href="<?= \yii\helpers\Url::to(['/report/index']) ?>" class="nav-link">📊 Панель</a>
+                <a href="<?= \yii\helpers\Url::to(['/product/index']) ?>" class="nav-link">📦 Товары</a>
+                <a href="<?= \yii\helpers\Url::to(['/category/index']) ?>" class="nav-link">🏷️ Категории</a>
+                <a href="<?= \yii\helpers\Url::to(['/sale/index']) ?>" class="nav-link">💰 Продажи</a>
+                <a href="<?= \yii\helpers\Url::to(['/income/index']) ?>" class="nav-link">📈 Приход</a>
+                <a href="<?= \yii\helpers\Url::to(['/sale/quick']) ?>" class="nav-link bg-white bg-opacity-20">⚡ Быстрая продажа</a>
+                <?php if (Yii::$app->user->isGuest): ?>
+                    <a href="<?= \yii\helpers\Url::to(['/site/login']) ?>" class="nav-link">🔐 Вход</a>
+                <?php else: ?>
+                    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'inline']) ?>
+                    <?= Html::submitButton(
+                        '👤 Выход',
+                        ['class' => 'nav-link bg-transparent border-0 cursor-pointer w-full text-left']
+                    ) ?>
+                    <?= Html::endForm() ?>
+                <?php endif; ?>
+            </div>
+        </nav>
+    </div>
 </header>
 
-<main id="main" class="flex-shrink-0" role="main">
-    <div class="container">
+<main class="flex-1 pt-4 pb-8">
+    <div class="container mx-auto px-4 max-w-7xl">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
-            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
+            <nav class="mb-6">
+                <?= Breadcrumbs::widget([
+                    'links' => $this->params['breadcrumbs'],
+                    'options' => ['class' => 'flex items-center space-x-2 text-sm text-gray-600']
+                ]) ?>
+            </nav>
         <?php endif ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        
+        <!-- Alerts -->
+        <div class="mb-6">
+            <?= Alert::widget() ?>
+        </div>
+        
+        <!-- Content -->
+        <div class="animate-fade-in-up">
+            <?= $content ?>
+        </div>
     </div>
 </main>
 
-<footer id="footer" class="mt-auto py-3 bg-light">
-    <div class="container">
-        <div class="row text-muted">
-            <div class="col-md-6 text-center text-md-start">&copy; My Company <?= date('Y') ?></div>
-            <div class="col-md-6 text-center text-md-end"><?= Yii::powered() ?></div>
+<footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
+            <div class="mb-2 md:mb-0">
+                &copy; Склад <?= date('Y') ?> - Система управления складом
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>Powered by <?= Yii::powered() ?></span>
+                <div class="flex items-center space-x-1">
+                    <div id="connection-status" class="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span id="connection-text" class="text-xs">Онлайн</span>
+                </div>
+            </div>
         </div>
     </div>
 </footer>
@@ -109,6 +200,69 @@ $this->registerJsFile('@web/js/pwa.js', ['position' => \yii\web\View::POS_END]);
 <?php $this->endBody() ?>
 
 <script>
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+    
+    // Connection status
+    const connectionStatus = document.getElementById('connection-status');
+    const connectionText = document.getElementById('connection-text');
+    const offlineIndicator = document.getElementById('offline-indicator');
+    
+    function updateConnectionStatus() {
+        if (navigator.onLine) {
+            connectionStatus.className = 'w-2 h-2 bg-green-500 rounded-full';
+            connectionText.textContent = 'Онлайн';
+            offlineIndicator.classList.remove('show');
+        } else {
+            connectionStatus.className = 'w-2 h-2 bg-red-500 rounded-full animate-pulse';
+            connectionText.textContent = 'Офлайн';
+            offlineIndicator.classList.add('show');
+        }
+    }
+    
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    updateConnectionStatus();
+    
+    // PWA Install prompt
+    let deferredPrompt;
+    const pwaInstallPrompt = document.getElementById('pwa-install-prompt');
+    const pwaInstallBtn = document.getElementById('pwa-install-btn');
+    const pwaDismissBtn = document.getElementById('pwa-dismiss-btn');
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        pwaInstallPrompt.classList.add('show');
+    });
+    
+    if (pwaInstallBtn) {
+        pwaInstallBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                deferredPrompt = null;
+                pwaInstallPrompt.classList.remove('show');
+            }
+        });
+    }
+    
+    if (pwaDismissBtn) {
+        pwaDismissBtn.addEventListener('click', () => {
+            pwaInstallPrompt.classList.remove('show');
+        });
+    }
+});
+
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
